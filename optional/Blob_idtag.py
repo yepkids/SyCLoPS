@@ -1,6 +1,7 @@
 ## Other potential applications of SyCLoPS datasets (Size and Precipitation Blob tagging)
-
 # Please direct any questions to the author of this script: Yushan Han (yshhan@ucdavis.edu)
+# Version: 2024-12-10
+
 import os
 import numpy as np
 import xarray as xr

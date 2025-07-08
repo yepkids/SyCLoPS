@@ -1,5 +1,6 @@
 #!/bin/bash
-# Please direct any questions to the author of this script (Zenodo @ver 6): Yushan Han (yshhan@ucdavis.edu)
+# Please direct any questions to the author of this script: Yushan Han (yshhan@ucdavis.edu)
+# Version: 2024-12-10
 
 TEMPESTEXTREMESDIR=~/tempestextremes/bin #Change this if necessary
 # We recommended running the commands in this file one at a time.
