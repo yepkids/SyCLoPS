@@ -471,6 +471,7 @@ if __name__ == '__main__':
         ("SC", "Subtropical Cyclone"),
         ("EX", "Extratropical Cyclone"),
         ("DSE", "Extratropical Disturbance"),
+        ("MS", "Monsoonal System (tracks)"),
     ]
 
     # Print header

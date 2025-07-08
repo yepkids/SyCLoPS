@@ -1,13 +1,14 @@
 print("\nThis is the SyCLoPS main program for executing TempestExtremes (TE) commands and run the Python classifier program.\n")
 print("Please direct any questions to the author of this script: Yushan Han (yshhan@ucdavis.edu)\n")
 print("Version: 2025-07-07 \n")
+print("The SyCLoPS manual might be helpful if you run into issues with the srcipts.")
 import os
 import subprocess
 import glob
 import time
 
 print("Please remember to review the code and comments in this file and modify accordingly before running. \n\
-Please also remember to activate an appropriate Python environment that has Xarray, Pandas, PyArrow, multiprocess, and Scipy installed.\n")
+Activate an appropriate Python environment that has Xarray, Pandas, PyArrow, multiprocess, and Scipy installed.\n")
 
 # Point to your TempestExtremes (TE) directory by specifying:
 TEMPESTEXTREMESDIR = os.path.expanduser('~/tempestextremes/bin')
@@ -16,20 +17,20 @@ print("Please change the following arguments according to your requirements. The
 #Define your time interval.
 timefilter = "3hr"
 #Define the merge distance for DetectNodes and the range distance for StitchNodes. Below is the recommendation for 3-hourly data.
+# If your time interval is different from the default 3-hour, please change the MergeDist and RangeDist variables accordingly.
+# A range distance of 6.0 degree is recommended for 6-hourly data if you only focus on tropical systems.
+# If you care about extratropical systems at 6-hourly interval, a range distance of 8.0 degree is recommended.
 MergeDist = 6.000001 #DetectNodes argument. We recommend adding 0.000001 to the distance to avoid floating point precision issues in some rare cases.
 RangeDist = 4.000001 #StitchNodes argument. We recommend adding 0.000001 to the distance to avoid floating point precision issues in some rare cases.
 MinTime = "18h" #StitchNodes argument
 MaxGap = "12h" #StitchNodes argument
 latname = 'latitude' #Name of the latitude variable in your dataset.
 lonname = 'longitude' #Name of the longitude variable in your dataset.
-print("If your time interval is different from the default 3-hour, please change the MergeDist and RangeDist variables accordingly.\n\
-A range distance of 6.0 degree is recommended for 6-hourly data if you only focus on tropical systems.\n\
-If you care about extratropical systems at 6-hourly interval, a range distance of 8.0 degree is recommended.\n")
-print("Note: If your RangeDist is larger than MergeDist, the program will automatically use the 'prioritize' flag in StitchNodes.\n")
+print("Note: If your RangeDist is larger than MergeDist, the program will automatically use the 'prioritize' flag in StitchNodes. See the manual 2.2 for details.\n")
 
 # Set this to True if you want to use parallel processing with srun when applicable.
-use_srun = True # Change to True if you want to use srun. Also see line 159 to verify if "srun" works on your machine.
-srun_n = "6"    # Number of tasks (threads) for srun
+use_srun = False # Change to True if you want to use srun. Also see line 180 to verify if "srun" works on your machine.
+srun_n = "256"    # Number of tasks (threads) for srun
 
 # Create a log directory if it doesn't exist (for storing temporary logs of TempestExtremes). You may change the path and name of this log directory.
 log_dir= "./TE_log"
@@ -85,7 +86,8 @@ def check_log_dir(log_dir):
 
 # Build the TempestExtremes commands. Feel free to modify the atmospheric variable names and levels.
 print("\nRemember to change the variable names in the TE commands if necessary.\n")
-print("If you run into issues with TE commands and can't solve them here in the main program, please use 'TE_commands.sh' (which contains original TE bash codes) for further debugging.\n")
+print("If you run into issues with TE commands and can't solve them here in the main program, you may use 'TE_commands.sh' (which contains original TE bash codes) for further debugging.\n\
+You may also check the TE documentation and the SyCLoPS manual.")
 
 detect_nodes_cmd = [
     f"{TEMPESTEXTREMESDIR}/DetectNodes",
@@ -98,6 +100,7 @@ detect_nodes_cmd = [
     "MSL,min,0;" #MSLP
     "MSL,posclosedcontour,2.0,0;" #MSLPCC20
     "MSL,posclosedcontour,5.5,0;" #MSLPCC55
+    #"_VECMAG(VAR_10U,VAR_10V),max,2.0;" #WS ##This is an optional parameter for reference purpose.
     "_DIFF(_VECMAG(U(200hPa),V(200hPa)),_VECMAG(U(850hPa),V(850hPa))),avg,10.0;" #DEEPSHEAR 
     ##If variables in your inputfiles are on a single level, e.g., U200 representing U at 200 hPa, then directly use "U200."
     "_DIFF(Z(300hPa),Z(500hPa)),negclosedcontour,6.5,1.0;" #UPPTKCC
