@@ -29,7 +29,7 @@ lonname = 'longitude' #Name of the longitude variable in your dataset.
 print("Note: If your RangeDist is larger than MergeDist, the program will automatically use the 'prioritize' flag in StitchNodes. See the manual 2.2 for details.\n")
 
 # Set this to True if you want to use parallel processing with srun when applicable.
-use_srun = False # Change to True if you want to use srun. Also see line 180 to verify if "srun" works on your machine.
+use_srun = False # Change to True if you want to use srun. Also see line 183 to verify if "srun" works on your machine.
 srun_n = "256"    # Number of tasks (threads) for srun
 
 # Create a log directory if it doesn't exist (for storing temporary logs of TempestExtremes). You may change the path and name of this log directory.
