@@ -26,7 +26,7 @@ It also labels the four high-impact LPS tracks: TC, MS (Monsoonal System), SS(ST
 Dependencies
 =====
 
-The SyCLoPS software is built upon TempestExtremes (TE), the state-of-the-art atmospheric feature detector. The main TE branch can be downloaded here: [https://github.com/ClimateGlobalChange/tempestextremes/tree/master] (Please see the node below.)
+The SyCLoPS software is built upon TempestExtremes (TE), the state-of-the-art atmospheric feature detector. The main TE branch can be downloaded here: [https://github.com/ClimateGlobalChange/tempestextremes/tree/master] (Please see the note below.)
 
 **Note:** The main TE branch now lacks the ability to deal with large missing values in datasets (e.g. 1e20), this will result in unreasonable values in the classification process for some datasets. NaNs as missing values are safe to proceed with. We are working on this issue and users can expect a newer TE version with fixes in the near future. For now, users can install this fork of TempestExtremes via CMAKE, which can be found here: [https://github.com/yepkids/tempestextremes], to work around this problem. This fork provides a temporary solution that adds missing value support for operators used by SyCLoPS and has been tested. Note that this is not a stable release, and please report any problems with this fork to Yushan Han (yshhan@ucdavis.edu). You can also choose to convert all missing values in your input files to NaNs.
 
