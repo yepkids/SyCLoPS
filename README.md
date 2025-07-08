@@ -47,7 +47,7 @@ https://climate.ucdavis.edu/tempestextremes.php
 
 Publications
 ============
-If you use the TempestExtremes software please cite our publications:
+If you use the SycLoPS software please cite our publications:
 
 [https://doi.org/10.1029/2024JD041287] Han, Y. and P.A. Ullrich (2025) "The System for Classification of Low-Pressure Systems (SyCLoPS): An all-in-one objective framework for large-scale datasets" J. Geophys. Res. Atm. 130 (1), e2024JD041287, doi: 10.1029/2024JD041287.
 
