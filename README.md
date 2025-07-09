@@ -5,6 +5,8 @@ Email:   yshhan@ucdavis.edu
 
 Copyright 2025 Yushan Han
 
+SyCLoPS 1970-2024 ERA5 low-pressure system catalogs and datasets can be downloaded via Zenodo: [https://doi.org/10.5281/zenodo.10906284]
+
 Introduction
 =====
 
