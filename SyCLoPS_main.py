@@ -21,13 +21,15 @@ timefilter = "3hr"
 # A range distance of 6.0 degree is recommended for 6-hourly data if you only focus on tropical systems.
 # If you care about extratropical systems at 6-hourly interval, a range distance of 8.0 degree is recommended.
 MergeDist = 6.000001 #DetectNodes argument. We recommend adding 0.000001 to the distance to avoid floating point precision issues in some rare cases.
-RangeDist = 4.000001 #StitchNodes argument. We recommend adding 0.000001 to the distance to avoid floating point precision issues in some rare cases.
+RangeDist = 4.000001 #StitchNodes argument. 
 MinTime = "18h" #StitchNodes argument
 MaxGap = "12h" #StitchNodes argument
 MSLP55CCStep = 5 #Steps for the MSLPCC55 threshold in StitchNodes to remove too-short and too-weak tracks. If you use 6-hourly data, you may lower this value to 3 or 2.
 latname = 'latitude' #Name of the latitude variable in your dataset.
 lonname = 'longitude' #Name of the longitude variable in your dataset.
 print("Note: If your RangeDist is larger than MergeDist, the program will automatically use the 'prioritize' flag in StitchNodes. See the manual 2.2 for details.\n")
+# Tips for detecting tropical-like cyclones (TLCs) specifically (prioritizing detection of TLCs): 
+# Because they are very small and transient, it's better to use a MergeDist of 1-2 degrees and a RangeDist of 1-2 degrees at 1-hour interval. Keep RangeDist smaller than MergeDist if possible.
 
 # Set this to True if you want to use parallel processing with srun when applicable.
 use_srun = False # Change to True if you want to use srun. Also see line 183 to verify if "srun" works on your machine.
