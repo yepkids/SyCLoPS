@@ -314,7 +314,7 @@ if __name__ == '__main__':
         cond_tc=(dfin.UPPTKCC<-147*zgconv) & (dfin.LOWTKCC<0) & (dfin.MSLPCC20>225) 
     elif OnlyMSLPCC55:
         cond_trop=(dfin.RH100MAX>20*rhconv) & (dfin.DEEPSHEAR<18) & (dfin.T850>280) 
-        cond_tc=(dfin.UPPTKCC<-147*zgconv) & (dfin.LOWTKCC<0) & (dfin.MSLPCC25>250) 
+        cond_tc=(dfin.UPPTKCC<-147*zgconv) & (dfin.LOWTKCC<0) & (dfin.MSLPCC55>250) 
     else:
         cond_trop=(dfin.RH100MAX>20*rhconv) & (dfin.DEEPSHEAR<18) & (dfin.T850>280) #Default Tropical Condition
         cond_tc=(dfin.UPPTKCC<-107.8*zgconv) & (dfin.LOWTKCC<0) & (dfin.MSLPCC20>215) #Default Tropical Cyclone Condition
