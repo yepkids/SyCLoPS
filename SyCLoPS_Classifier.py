@@ -1,6 +1,6 @@
 print("\nThis is the SyCLoPS classifier program. This program formats the input catalog, calculates LPSAREA, classifies each LPS node according to the conditions, and outputs the classified catalog.\n")
 print("Please direct any questions to the author of this script: Yushan Han (yshhan@ucdavis.edu)\n")
-print("Version: 2025-07-07 \n")
+print("Version: 2025-07-27 \n")
 print("PyArrow (https://arrow.apache.org/docs/python/install.html) is needed to read/write parquet files in this program. Parquet files are faster to read/write and they take up less space on disk.\n")
 print('The "multiprocess" package (https://pypi.org/project/multiprocess) is needed to enable efficient memory sharing of large data structure across processors to perform the parallel computation in this script.\n')
 print('Please change the constants and files names accordingly in the first part of the script before running the prorgam.\n')
