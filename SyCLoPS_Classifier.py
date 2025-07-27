@@ -452,7 +452,7 @@ if __name__ == '__main__':
         track_label[qstrack_id]=track_label[qstrack_id]+'_QS'
     dfin['Track_Info']=track_label
     
-    # Adjusting (smoothing) Labels for TDs in stable TC periods.
+    # Adjusting (smoothing) Labels for TDs in stable TC periods (experiemental).
     labels=dfin.Short_Label.values.copy()
     fi=dftc.groupby('TID').head(1).index
     li=dftc.groupby('TID').tail(1).index
@@ -471,7 +471,8 @@ if __name__ == '__main__':
                     if abs(mslp_values-mslp_int).max() <= 500:
                         labels[i:i+j] = 'TC'
     dfin['Adjusted_Label'] = labels
-    
+
+    # Adjusting (smoothing) Labels for TDs/TLOs in stable MS periods (experiemental).
     dfms = dfin[dfin.TID.isin(mstrack)] #Select MS tracks
     labels = dfin.Adjusted_Label.values.copy()
     fi=dfms.groupby('TID').head(1).index
