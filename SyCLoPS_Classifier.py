@@ -173,7 +173,7 @@ if __name__ == '__main__':
         dfin.columns = dfin.columns.str.strip()
         #Combine four time columns to form the ISOTIME column
         dfin.insert(5, 'ISOTIME', pd.to_datetime(dict(year=dfin.year, month=dfin.month, day=dfin.day,hour=dfin.hour)))
-        #dfin=dfin.drop(columns=['i', 'j','year','month','day','hour'])
+        dfin=dfin.drop(columns=['year','month','day','hour'])
         dfin=dfin.rename(columns={"lon": "LON", "lat": "LAT","track_id":"TID"})
         if 2<=modenum<=3:
             dfin.to_parquet(InputFileName) #Save the final form of the input catalog
@@ -289,9 +289,9 @@ if __name__ == '__main__':
 
     ## High-altitude Branch Labeling
     try:
-        cond_hal=(dfin.Z850<dfin.ZS)  #High-altitude Condition. Z850 is not necessary for classification if data contains missing values (typically 1e20 or 1e15) or NaN. T850 will be used.
+        cond_hal=(dfin.Z850<dfin.ZS) | (dfin.Z850-dfin.ZS<100) #High-altitude Condition. Z850 is not necessary for classification if data contains missing values (typically 1e20 or 1e15) or NaN. T850 will be used.
     except:
-        cond_hal=(dfin.T850!=dfin.T850) | (abs(dfin.T850)>1e14) | (dfin.T850==0) | (dfin.Z850-dfin.ZS<100)
+        cond_hal=(dfin.T850!=dfin.T850) | (abs(dfin.T850)>1e14) | (dfin.T850==0)
     df_hatl=dfin[(cond_hal) & ((dfin.MIDTKCC<0)|(dfin.UPPTKCC<0))]; hatl_id=df_hatl.index.values #nodes that satisfy criteria of HATL. Check for missing values is added.
     df_hal=dfin[(cond_hal) & ~((dfin.MIDTKCC<0)|(dfin.UPPTKCC<0))]; hal_id=df_hal.index.values #nodes that satisfy criteria of HAL. Check for missing values is added.
     Full_Name[hatl_id]="High-altitude Thermal Low"; short_label[hatl_id]="HATHL"
@@ -452,8 +452,52 @@ if __name__ == '__main__':
         track_label[qstrack_id]=track_label[qstrack_id]+'_QS'
     dfin['Track_Info']=track_label
     
+    # Adjusting (smoothing) Labels for TDs in stable TC periods.
+    labels=dfin.Short_Label.values.copy()
+    fi=dftc.groupby('TID').head(1).index
+    li=dftc.groupby('TID').tail(1).index
+    for j in range(1,round(8*convrate+1)):
+        for k in range(len(fi)):
+            for i in range(fi[k]+j, li[k]-j+1):
+                if (
+                    all('TD' in label for label in labels[i:i+j]) and 
+                    all('TC' in label for label in labels[i-j:i]) and 
+                    all('TC' in label for label in labels[i+j:i+2*j])
+                ):
+                    mslp_values= dftc.MSLP.loc[i-1:i+j].values
+                    mslp_start = mslp_values[0]
+                    mslp_end = mslp_values[-1]
+                    mslp_int = np.linspace(mslp_start, mslp_end, j+2)
+                    if abs(mslp_values-mslp_int).max() <= 500:
+                        labels[i:i+j] = 'TC'
+    dfin['Adjusted_Label'] = labels
+    
+    dfms = dfin[dfin.TID.isin(mstrack)] #Select MS tracks
+    labels = dfin.Adjusted_Label.values.copy()
+    fi=dfms.groupby('TID').head(1).index
+    li=dfms.groupby('TID').tail(1).index
+    for j in range(1,round(8*convrate+1)):
+        for k in range(len(fi)):
+            for i in range(fi[k]+j, li[k]-j+1):
+                if (
+                    all((label == 'TD' or label == 'TLO') for label in labels[i:i+j]) and
+                    all('M' in label for label in labels[i-j:i]) and
+                    all('M' in label for label in labels[i+j:i+2*j])
+                ):
+                    mslp_values= dfms.MSLP.loc[i-1:i+j].values
+                    mslp_start = mslp_values[0]
+                    mslp_end = mslp_values[-1]
+                    mslp_int = np.linspace(mslp_start, mslp_end, j+2)
+                    if abs(mslp_values-mslp_int).max() <= 500:
+                        for idx in range(i, i+j):
+                            if labels[idx] == 'TD':
+                                labels[idx] = 'TD(MD)'
+                            elif labels[idx] == 'TLO':
+                                labels[idx] = 'TLO(ML)'                     
+    dfin['Adjusted_Label'] = labels
+ 
     ## Output the LPS classified catalog
-    desired_columns = ['TID', 'LON', 'LAT', 'ISOTIME', 'MSLP', 'WS', 'WS925', 'ZS','Full_Name', 'Short_Label', 'Tropical_Flag', 'Transition_Zone', 'Track_Info', 'LPSAREA', 'IKE', 'i', 'j']
+    desired_columns = ['TID', 'LON', 'LAT', 'ISOTIME', 'MSLP', 'WS', 'WS925', 'ZS', 'Short_Label', 'Adjusted_Label', 'Tropical_Flag', 'Transition_Zone', 'Track_Info', 'LPSAREA', 'IKE']
     available_columns = [col for col in desired_columns if col in dfin.columns]
     dfout = dfin[available_columns]
     dfout.to_parquet(ClassifiedOutFile)
