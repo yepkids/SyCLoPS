@@ -149,7 +149,7 @@ stitch_nodes_cmd = [
     "--threshold", f"MSLPCC55,>=,100.0,{MSLP55CCStep}",
     "--out_file_format", "csv"
 ]
-if MergeDist > RangeDist:
+if MergeDist < RangeDist:
      stitch_nodes_cmd.extend(["--prioritize", "MSLP"])
 
 variable_processor_cmd = [
