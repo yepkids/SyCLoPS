@@ -162,7 +162,8 @@ if __name__ == '__main__':
             print("You entered a time resolution greater than 6 hrs or less than 1 hr. Please confirm that the track data meet the time resolution requirement and enter again.")  
     convrate=3/int(timeres)
 
-    OnlyMSLPCC55=False #If you want to use only MSLPCC55 for classification of TCs in case you have a very coarse resolution model (e.g., 1-2 degrees), set this to True.
+    OnlyMSLPCC55=False #If you want to use only MSLPCC55 for classification of TCs in case you have a very coarse resolution model (e.g., 1-2 degrees), set this to True. 
+    # Note that this option assumes 300/200 hPa data. 250 hPa data is not supported. We will update this section soon to allow for a flexible threshold based on different grid resolutions.
     # Note that MSLPCC55 is not suitable for classifying TLCs, so it is not used in TLC classification even if this is set to True.
 
     if modenum<=3:
@@ -312,12 +313,13 @@ if __name__ == '__main__':
     if data250=='Y' or data250=='y':
         cond_trop=(dfin.RH100MAX>20*rhconv) & (dfin.DEEPSHEAR<13) & (dfin.T850>280) 
         cond_tc=(dfin.UPPTKCC<-147*zgconv) & (dfin.LOWTKCC<0) & (dfin.MSLPCC20>225) 
-    elif OnlyMSLPCC55:
-        cond_trop=(dfin.RH100MAX>20*rhconv) & (dfin.DEEPSHEAR<18) & (dfin.T850>280) 
-        cond_tc=(dfin.UPPTKCC<-147*zgconv) & (dfin.LOWTKCC<0) & (dfin.MSLPCC55>250) 
     else:
-        cond_trop=(dfin.RH100MAX>20*rhconv) & (dfin.DEEPSHEAR<18) & (dfin.T850>280) #Default Tropical Condition
-        cond_tc=(dfin.UPPTKCC<-107.8*zgconv) & (dfin.LOWTKCC<0) & (dfin.MSLPCC20>215) #Default Tropical Cyclone Condition
+        if OnlyMSLPCC55:
+            cond_trop=(dfin.RH100MAX>20*rhconv) & (dfin.DEEPSHEAR<18) & (dfin.T850>280) 
+            cond_tc=(dfin.UPPTKCC<-147*zgconv) & (dfin.LOWTKCC<0) & (dfin.MSLPCC55>250) 
+        else:
+            cond_trop=(dfin.RH100MAX>20*rhconv) & (dfin.DEEPSHEAR<18) & (dfin.T850>280) #Default Tropical Condition
+            cond_tc=(dfin.UPPTKCC<-107.8*zgconv) & (dfin.LOWTKCC<0) & (dfin.MSLPCC20>215) #Default Tropical Cyclone Condition
         
     cond_td=(dfin.MSLPCC55>160) & (dfin.UPPTKCC<0)  #Tropical Depression Condition
     cond_md=(dfin.RH850AVG>85*rhconv) & (dfin.U850DIFF>0)  #Monsoon System Condition
