@@ -1,6 +1,6 @@
 print("\nThis is the SyCLoPS main program for executing TempestExtremes (TE) commands and run the Python classifier program.\n")
 print("Please direct any questions to the author of this script: Yushan Han (yshhan@ucdavis.edu)\n")
-print("Version: 2025-07-27 \n")
+print("Version: 2025-12-01 \n")
 print("The SyCLoPS manual might be helpful if you run into issues with the srcipts.")
 import os
 import subprocess
@@ -12,28 +12,31 @@ Activate an appropriate Python environment that has Xarray, Pandas, PyArrow, mul
 
 # Point to your TempestExtremes (TE) directory by specifying:
 TEMPESTEXTREMESDIR = os.path.expanduser('~/tempestextremes/bin')
+model_data_name = "ERA5" # Change this to your model or dataset name used in the input and output file lists.
 
 print("Please change the following specifications according to your requirements. The default is for ERA5 data at 3-hourly interval.\n")
-#Define your time interval.
-timefilter = "3hr"
-#Define the merge distance for DetectNodes and the range distance for StitchNodes. Below is the recommendation for 3-hourly data.
+# Define your time interval.
+timefilter = "6hr"
+# Define the merge distance for DetectNodes and the range distance for StitchNodes. Below is the recommendation for 3-hourly data.
 # If your time interval is different from the default 3-hour, please change the MergeDist and RangeDist variables accordingly.
-# A range distance of 6.0 degree is recommended for 6-hourly data if you only focus on tropical systems.
-# If you care about extratropical systems at 6-hourly interval, a range distance of 8.0 degree is recommended.
-MergeDist = 6.000001 #DetectNodes argument. We recommend adding 0.000001 to the distance to avoid floating point precision issues in some rare cases.
-RangeDist = 4.000001 #StitchNodes argument. 
+# A range distance of 6.0 degree is recommended for 6-hourly data if you only focus on tropical systems. If you care about extratropical systems at 6-hourly interval, a range distance of 8.0 degree is recommended.
+MergeDist = 4.000001 #DetectNodes argument. We recommend adding 0.000001 to the distance when your MergeDist = RangeDist to avoid floating point precision issues in some rare cases.
+RangeDist = 6.00000 #StitchNodes argument. 
 MinTime = "18h" #StitchNodes argument
-MaxGap = "12h" #StitchNodes argument ##This parameter may be tuned lower if you are using km-scale model data.
+MaxGap = "12h" #StitchNodes argument. This can be shortened if you are using a very high-resolution dataset to avoid excessive noise.
 MSLP55CCStep = 5 #Steps for the MSLPCC55 threshold in StitchNodes to remove too-short and too-weak tracks. If you use 6-hourly data, you may lower this value to 3 or 2.
-latname = 'latitude' #Name of the latitude variable in your dataset.
-lonname = 'longitude' #Name of the longitude variable in your dataset.
+latname = 'lat' #Name of the latitude variable in your dataset.
+lonname = 'lon' #Name of the longitude variable in your dataset.
 print("Note: If your RangeDist is larger than MergeDist, the program will automatically use the 'prioritize' flag in StitchNodes. See the manual 2.2 for details.\n")
-# Tips for detecting tropical-like cyclones (TLCs) specifically (prioritizing detection of TLCs): 
-# Because they are very small and transient, it's better to use a MergeDist of 1-2 degrees and a RangeDist of 1-2 degrees at 1-hour interval. Keep RangeDist smaller than MergeDist if possible.
+# Tips for detecting tropical-like cyclones (TLCs: polar lows and subtropical storms) specifically (prioritizing detection of TLCs): 
+# Because they are very small and transient, it's better to use a MergeDist <=3 degrees and a RangeDist of a equal distance at 1-hour or 3-hour intervals.
 
 # Set this to True if you want to use parallel processing with srun when applicable.
-use_srun = False # Change to True if you want to use srun. Also see line 195 to verify if "srun" works on your machine.
+use_srun = True # Change to True if you want to use srun. Also see line 183 to verify if "srun" works on your machine.
+use_250hPa_only = False # Set to True if your dataset only contains 250 hPa level for upper-level wind (U and V) and geopotential height.
 srun_n = "256"    # Number of tasks (threads) for srun
+uv_level_value = "250hPa" if use_250hPa_only else "200hPa"
+z_level_value = "250hPa" if use_250hPa_only else "300hPa"
 
 # Create a log directory if it doesn't exist (for storing temporary logs of TempestExtremes). You may change the path and name of this log directory.
 log_dir= "./TE_log"
@@ -42,6 +45,7 @@ os.makedirs(log_dir, exist_ok=True)
 #If your dataset is not on a unstructured grid (i.e., not lon-lat grid), you should specify a connectivity file below and set use_connect to True.
 use_connect = False 
 connectivity_file = "connect_healpix_grid_zoom_8_example_filename.txt"
+
 
 # Mode choice by user
 while True:
@@ -66,24 +70,35 @@ while True:
         break
 
 # Define your input and output file lists and filenames.
-inputfile_DN = "ERA5_lpsnode_in.txt" #"This txt file should contain the list of existing input files that contains all the necessary variables for DetectNodes. \
-# Please refer to "Manual/Required_Variables.png" for the list of required variables.
-outputfile_DN = "ERA5_lpsnode_out.txt" #This txt file should contain a list of output path and filenames that will be generated by DetectNodes and should have the same number of lines as the inputfiles.
-outputfile_SN = "ERA5_lps_tracks.csv" #This is the single output track file's filename in StitchNodes.
-inputfile_VP = "ERA5_sizeblob_in.txt" #This txt file should contain the list of U and V at 850 hPa and 925 hPa levels.
-outputfile_VP = "ERA5_crvort_out.txt" #This txt file should contain the list of output cyclonic relative vorticity path and filenames that will be generated by VariableProcessor \
-# and should have the same number of lines as the inputfiles.
-outputfile_DB = "ERA5_sizeblob_out.txt" #This txt file should contain the list of output path and filenames that will be generated by DetectBlobs and should have the same number of lines as outputfile_VP.
-outputfile_BS = "ERA5_size_blob_stats.txt" #This is the filename of the single output file of BlobStats which contains the blob statistics.
+inputfile_DN = f"file_list/{model_data_name}_lpsnode_in.txt" #"This txt file should contain the list of existing input files that contains all the necessary variables for DetectNodes. \
+# Please refer to "Manual/Required_Variables.png" for the list of required variables.")
+outputfile_DN = f"file_list/{model_data_name}_lpsnode_out.txt" #This txt file should contain a list of output path and filenames that will be generated by DetectNodes and should have the same number of lines as the inputfiles.")
+outputfile_SN = f"out_track/{model_data_name}_tracks_range60.csv" #This is the single output track file's filename in StitchNodes.
+inputfile_VP = f"{model_data_name}_sizeblob_in.txt" #This txt file should contain the list of U and V at 850 hPa and 925 hPa levels.")
+outputfile_VP = f"{model_data_name}_crvort_out.txt" #This txt file should contain the list of output cyclonic relative vorticity path and filenames that will be generated by VariableProcessor \
+# and should have the same number of lines as the inputfiles.")
+outputfile_DB = f"{model_data_name}_sizeblob_out.txt" #This txt file should contain the list of output path and filenames that will be generated by DetectBlobs and should have the same number of lines as the inputfiles.")
+outputfile_BS = f"{model_data_name}_size_blob_stats.txt" #This is the single output file of BlobStats which contains the blob statistics.
 
-# Check for "EXCEPTION" in the last line of the first log file in ./TE_log
+# Define atmospheric variable names in your dataset. Change them if necessary.
+mslp_name = 'MSL'
+z_name = 'Z'
+u_name = 'U'
+v_name = 'V'
+r_name = 'R'
+t_name = 'T'
+zs_name = 'ZS'
+#vo_name = 'VO' # Relative vorticity is no longer needed. It can be calculated via TE using U and V.
+
+if os.path.exists(log_dir):
+    for f in glob.glob(os.path.join(log_dir, "*.txt")):
+        os.remove(f)
+# Check for "EXCEPTION" in the last line of the last log file in ./TE_log
 def check_log_dir(log_dir,t0):
-    log_files = sorted(glob.glob(os.path.join(log_dir, "log*.txt")))
-    
+    log_files = sorted(glob.glob(os.path.join(log_dir, "*")))
     if log_files:
         mod_time = os.path.getmtime(log_files[0])
-        print(mod_time,t0)
-        if mod_time - t0 < -3:
+        if mod_time - t0 < 0:
              print("No log files were generated in the log directory. Check the error message output by TempestExtremes.")
              exit(1)
         with open(log_files[0], "r") as f:
@@ -101,34 +116,33 @@ print("\nRemember to change the atmospheric variable names in the TE commands if
 print("If you run into issues with TE commands and can't solve them here in the main program, you may use 'TE_commands.sh' (which contains original TE bash codes) for further debugging.\n\
 You may also check the TE documentation and the SyCLoPS manual.")
 
-# Note: you don't need to change the pressure level units in the commands below as they will be automatically converted to hPa by TempestExtremes.
 detect_nodes_cmd = [
     f"{TEMPESTEXTREMESDIR}/DetectNodes",
     "--in_data_list", inputfile_DN,
     "--out_file_list", outputfile_DN,
-    "--searchbymin", "MSL",
-    "--closedcontourcmd", "MSL,10,5.5,0",
+    "--searchbymin", f"{mslp_name}",
+    "--closedcontourcmd", f"{mslp_name},10,5.5,0",
+    #"--thresholdcmd", f"{mask_name},=,1,0",
     "--mergedist", str(MergeDist),
     "--outputcmd", #Output the following parameters for classification.
-    "MSL,min,0;" #MSLP
-    "MSL,posclosedcontour,2.0,0;" #MSLPCC20
-    "MSL,posclosedcontour,5.5,0;" #MSLPCC55
-    #"_VECMAG(VAR_10U,VAR_10V),max,2.0;" #WS ##This is an optional parameter for reference purpose.
-    "_DIFF(_VECMAG(U(200hPa),V(200hPa)),_VECMAG(U(850hPa),V(850hPa))),avg,10.0;" #DEEPSHEAR 
+    f"{mslp_name},min,0;" #MSLP
+    f"{mslp_name},posclosedcontour,2.0,0;" #MSLPCC20
+    f"{mslp_name},posclosedcontour,5.5,0;" #MSLPCC55
+    f"_VECMAG(uas,vas),max,3.0;" #WS ##This is an optional parameter (10m max wind speed) for reference purpose.
+    f"_DIFF(_VECMAG({u_name}({uv_level_value}),{v_name}({uv_level_value})),_VECMAG({u_name}(850hPa),{v_name}(850hPa))),avg,10.0;" #DEEPSHEAR
     ##If variables in your inputfiles are on a single level, e.g., U200 representing U at 200 hPa, then directly use "U200."
-    "_DIFF(Z(300hPa),Z(500hPa)),negclosedcontour,6.5,1.0;" #UPPTKCC
-    "_DIFF(Z(500hPa),Z(700hPa)),negclosedcontour,3.5,1.0;" #MIDTKCC
-    "_DIFF(Z(700hPa),Z(925hPa)),negclosedcontour,3.5,1.0;" #LOWTKCC
-    "Z(500hPa),posclosedcontour,3.5,1.0;" #Z500CC
-    "VO(500hPa),avg,2.5;" #VO500AVG ##If VO (relative vorticity) is not directly available in your dataset, you can replace this line with "_CURL{8,2.5}(U(500hPa),V(500hPa)),min,0" \
-    # for low-resolution data or "_CURL{16,2.5}(U(500hPa),V(500hPa)),min,0" for high-resolution data to calculate relative vorticity via TE.
-    "R(100hPa),max,2.5;" #RH100MAX
-    "R(850hPa),avg,2.5;" #RH850AVG
-    "T(850hPa),max,0.0;" #T850
-    "Z(850hPa),min,0;" #Z850 ##This parameter is not necessary if the dataset contains NaNs or missing values where 850 hPa level is below the surface.
-    "ZS,min,0;" #ZS ##This parameter is not necessary if the dataset contains NaNs or missing values where 850 hPa level is below the surface, but we recommend keeping it for other useful information.
-    "U(850hPa),posminusnegwtarea,5.5;" #U850DIFF
-    "_VECMAG(U(200hPa),V(200hPa)),maxpoleward,1.0", #WS200PMX
+    f"_DIFF({z_name}({z_level_value}),{z_name}(500hPa)),negclosedcontour,6.5,1;" #UPPTKCC
+    f"_DIFF({z_name}(500hPa),{z_name}(700hPa)),negclosedcontour,3.5,1;" #MIDTKCC
+    f"_DIFF({z_name}(700hPa),{z_name}(925hPa)),negclosedcontour,3.5,1;" #LOWTKCC
+    f"{z_name}(500hPa),posclosedcontour,3.5,1;" #Z500CC
+    f"_CURL{{8,3.0}}({u_name}(500hPa),{v_name}(500hPa)),min,0;" #VO500AVG 
+    f"{r_name}(100hPa),max,2.5;" #RH100MAX
+    f"{r_name}(850hPa),avg,2.5;" #RH850AVG
+    f"{t_name}(850hPa),max,0.0;" #T850
+    f"{z_name}(850hPa),min,0;" #Z850 ##This parameter is not necessary if the dataset contains NaNs or missing values where 850 hPa level is below the surface. If you removed this, please also remove "Z850" in the StitchNodes command below
+    f"{zs_name},min,0;" #ZS ##This parameter is not necessary if the dataset contains NaNs or missing values where 850 hPa level is below the surface, but we recommend keeping it for other useful information. If you removed this, please also remove "ZS" in the StitchNodes command below
+    f"{u_name}(850hPa),posminusnegwtarea,5.5;" #U850DIFF
+    f"_VECMAG({u_name}({uv_level_value}),{v_name}({uv_level_value})),maxpoleward,1.0", #WS200PMX
     "--timefilter", timefilter,
     "--latname", latname,
     "--lonname", lonname,
@@ -140,23 +154,24 @@ stitch_nodes_cmd = [
     f"{TEMPESTEXTREMESDIR}/StitchNodes",
     "--in_list", outputfile_DN,
     "--out", outputfile_SN,
-    "--in_fmt", "lon,lat,MSLP,MSLPCC20,MSLPCC55,DEEPSHEAR,UPPTKCC,MIDTKCC,LOWTKCC,"
+    "--in_fmt", "lon,lat,MSLP,MSLPCC20,MSLPCC55,WS,DEEPSHEAR,UPPTKCC,MIDTKCC,LOWTKCC,"
                 "Z500CC,VO500AVG,RH100MAX,RH850AVG,T850,Z850,ZS,U850DIFF,WS200PMX",
     # Change the parameter (names) in this argument according to the outputcmd in DetectNodes if applicable. If using 250 hPa data, it's recommended to change the parameter name "WS200PMX" to "WS250PMX".
     "--range", str(RangeDist),
     "--mintime", MinTime,
     "--maxgap", MaxGap,
     "--threshold", f"MSLPCC55,>=,100.0,{MSLP55CCStep}",
-    "--out_file_format", "csv"
+    "--out_file_format", "csv",
+    #"--caltype","360_day"
 ]
-if MergeDist < RangeDist:
+if MergeDist > RangeDist:
      stitch_nodes_cmd.extend(["--prioritize", "MSLP"])
 
 variable_processor_cmd = [
     f"{TEMPESTEXTREMESDIR}/VariableProcessor",
     "--in_data_list", inputfile_VP,
     "--out_data_list", outputfile_VP,
-    "--var", "_COND(_LAT(),_CURL{8,3}(U(850hPa),V(850hPa)),_PROD(_CURL{8,3}(U(850hPa),V(850hPa)),-1)),U(925hPa),V(925hPa)",
+    "--var", f"_COND(_LAT(),_CURL{{8,3}}({u_name}(850hPa),{v_name}(850hPa)),_PROD(_CURL{{8,3}}({u_name}(850hPa),{v_name}(850hPa)),-1)),{u_name}(925hPa),{v_name}(925hPa)",
     "--varout", "Cyclonic_Vorticity,U925,V925", # U and V at 925 hPa (U925 & V925) will be used in the next step.
     "--latname", latname,
     "--lonname", lonname,
@@ -225,8 +240,6 @@ try:
             if "EXCEPTION" in last_line:
                 print("Error in DetectNodes command:", last_line)
                 exit(1)
-            else:
-                check_log_dir(log_dir,t0)
         t1 = time.time()
         print(f"DetectNodes command executed successfully in {t1 - t0:.2f} seconds.")
 
@@ -249,7 +262,7 @@ try:
             print("Running VariableProcessor...")
             if use_srun:
                 subprocess.run(variable_processor_cmd, check=True)
-                check_log_dir(log_dir,t0)   
+                check_log_dir(log_dir)   
             else:    
                 result=subprocess.run(variable_processor_cmd, capture_output=True, check=True)
                 # Capture the output and check for errors
@@ -258,8 +271,6 @@ try:
                 if "EXCEPTION" in last_line:
                     print("Error in VariableProcessor command:", last_line)
                     exit(1)
-                else:
-                    check_log_dir(log_dir,t0)
             t1 = time.time()
             print(f"VariableProcessor command executed successfully in {t1 - t0:.2f} seconds.")
             
@@ -268,7 +279,7 @@ try:
             print("Running DetectBlobs...")
             if use_srun:
                 subprocess.run(detect_blobs_cmd, check=True)
-                check_log_dir(log_dir,t0)   
+                check_log_dir(log_dir)   
             else:    
                 result=subprocess.run(detect_blobs_cmd, capture_output=True, check=True)
                 # Capture the output and check for errors
@@ -277,8 +288,6 @@ try:
                 if "EXCEPTION" in last_line:
                     print("Error in DetectBlobs command:", last_line)
                     exit(1)
-                else:
-                    check_log_dir(log_dir,t0)
             t1 = time.time()
             print(f"DetectBlobs command executed successfully in {t1 - t0:.2f} seconds.")
 
