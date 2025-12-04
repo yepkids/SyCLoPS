@@ -440,9 +440,10 @@ if __name__ == '__main__':
     ttflag=np.zeros(len(tctrack)).astype(int)-1
     for c, i in enumerate(tctrack):
         df0=dftc[dftc.TID==i]
-        if df0.iloc[0].Tropical_Flag==0 or df0.iloc[0].Transition_Zone>0:
-            fsttc=df0[(df0.Short_Label=='TC')].index[0]
-            ttflag[c]=fsttc
+        fst_tc=df0[(df0.Short_Label=='TC')].index[0]
+        dftc_pre=df0.loc[:fst_tc-1]
+        if np.any(dftc_pre.Tropical_Flag==0):
+            ttflag[c]=fst_tc
     ttflag= np.delete(ttflag, np.argwhere(ttflag==-1))
     
     ## Writing information for Track_Info
