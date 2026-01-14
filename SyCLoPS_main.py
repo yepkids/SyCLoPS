@@ -164,7 +164,7 @@ stitch_nodes_cmd = [
     "--out_file_format", "csv",
     #"--caltype","360_day"
 ]
-if MergeDist > RangeDist:
+if MergeDist < RangeDist:
      stitch_nodes_cmd.extend(["--prioritize", "MSLP"])
 
 variable_processor_cmd = [
