@@ -3,9 +3,20 @@
 Author:  Yushan Han
 Email:   yshhan@ucdavis.edu
 
-Copyright 2025 Yushan Han
+Copyright 2025-2026 Yushan Han
 
 SyCLoPS 1970-2024 ERA5 low-pressure system catalogs and datasets can be downloaded via Zenodo: [https://doi.org/10.5281/zenodo.10906284]
+
+New features in v1.1
+=====
+
+(1) The SyCLoPS classifier now accepts the data grid resolution as a customizable input to refine tropical cyclone detection at any grid resolution.
+(2) Improved detection of extratropical and tropical transitions in tropical cyclone tracks
+(3) The introduction of the "--prioritize" argument in the StitchNodes command enables 6-hour interval tracking with a large range distance
+(4) Improved support for unstructured grids
+(5) A more convenient workflow for easily adapting to different models
+(6) Automatic detection of TE runtime errors in subprocesses within the Python script
+(7) A new tool (`NodeFile_to_csv.py`) uploaded to the `optional` folder enables direct transformation from DetectNodes outputs to a user-friendly csv.
 
 Introduction
 =====
@@ -28,16 +39,16 @@ It also labels the four high-impact LPS tracks: TC, MS (Monsoonal System), SS(ST
 Dependencies
 =====
 
-The SyCLoPS software is built upon TempestExtremes (TE), the state-of-the-art atmospheric feature detector. The main TE branch can be downloaded at: [https://github.com/ClimateGlobalChange/tempestextremes] (**Please see the note below**)
+The SyCLoPS software is built upon TempestExtremes (TE), the state-of-the-art atmospheric feature detector. The main TE branch can be downloaded at: [https://github.com/ClimateGlobalChange/tempestextremes]
 
-**Note:** The main TE branch now lacks the ability to deal with large missing values in datasets (e.g. 1e20), this will result in unreasonable values in the classification process for some datasets. NaNs as missing values are safe to proceed with. We are working on this issue and users can expect a newer TE version with universal support for treating missing values in the near future. For now, users can install this fork of TempestExtremes here: [https://github.com/yepkids/tempestextremes], to work around this problem. To install this fork, simply git clone the fork to your path and run the `quick_make_unix.sh`. This fork provides a temporary solution that adds missing value support for operators used by SyCLoPS and has been extensively tested. Note that this is not a stable release, and please report any problems with this fork to Yushan Han (yshhan@ucdavis.edu). You can also choose to convert all missing values in your input files to NaNs.
+**Note:** TE now supports missing value calculations.
 
-The SyCLoPS software requires the following Python packages: Xarray, Pandas, PyArrow, multiprocess, and Scipy.
+The SyCLoPS software requires the following Python packages: Xarray, Pandas, PyArrow, multiprocess, cftime, and Scipy.
 
 Usage
 =====
 
-Simply download the SyCLoPS folder to your machine. Then: 
+Simply download the SyCLoPS package to your machine. Then: 
 
 1. Review the codes and comments in `SyCLoPS_main.py`. Change variable names and other specifications according to your needs.
 
