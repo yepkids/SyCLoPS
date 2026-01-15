@@ -1,6 +1,7 @@
 # SyCLoPS
 
 Author:  Yushan Han
+
 Email:   yshhan@ucdavis.edu
 
 Copyright 2025-2026 Yushan Han
@@ -10,13 +11,13 @@ SyCLoPS 1970-2024 ERA5 low-pressure system catalogs and datasets can be download
 New features in v1.1
 =====
 
-(1) The SyCLoPS classifier now accepts the data grid resolution as a customizable input to refine tropical cyclone detection at any grid resolution.
-(2) Improved detection of extratropical and tropical transitions in tropical cyclone tracks
-(3) The introduction of the "--prioritize" argument in the StitchNodes command enables 6-hour interval tracking with a large range distance
-(4) Improved support for unstructured grids
-(5) A more convenient workflow for easily adapting to different models
-(6) Automatic detection of TE runtime errors in subprocesses within the Python script
-(7) A new tool (`NodeFile_to_csv.py`) uploaded to the `optional` folder enables direct transformation from DetectNodes outputs to a user-friendly csv.
+(1) The SyCLoPS classifier now accepts the data grid resolution as a customizable input to refine tropical cyclone detection at any grid resolution.  
+(2) Improved detection of extratropical and tropical transitions in tropical cyclone tracks  
+(3) The introduction of the "--prioritize" argument in the StitchNodes command enables 6-hour interval tracking with a large range distance  
+(4) Improved support for unstructured grids  
+(5) A more convenient workflow for easily adapting to different models  
+(6) Automatic detection of TE runtime errors in subprocesses within the Python script  
+(7) A new tool (`NodeFile_to_csv.py`) uploaded to the `optional` folder enables direct transformation from DetectNodes outputs to a user-friendly csv.  
 
 Introduction
 =====
@@ -41,7 +42,7 @@ Dependencies
 
 The SyCLoPS software is built upon TempestExtremes (TE), the state-of-the-art atmospheric feature detector. The main TE branch can be downloaded at: [https://github.com/ClimateGlobalChange/tempestextremes]
 
-**Note:** TE now supports missing value calculations.
+**Note:** TE now supports reading and calculating missing values in model outputs.
 
 The SyCLoPS software requires the following Python packages: Xarray, Pandas, PyArrow, multiprocess, cftime, and Scipy.
 
@@ -60,10 +61,10 @@ Optional steps for tagging precipitation and size blobs of LPSs can be found in 
 Documentation
 =====
 
-1. SyCLoPS manual (in PDF) can be found in the `manual` folder and can also found online here (the online version may be lagging): 
+1. (New manual for v1.1 will be available soon) SyCLoPS manual (in PDF) can be found in the `manual` folder and can also found online here (the online version may be lagging): 
 https://climate.ucdavis.edu/syclops.php
 
-2. Details of the various executables that are part of TempestExtremes (TE) can be found in the user guide:
+2. Details of the various executables that are part of TempestExtremes can be found in the user guide:
 https://climate.ucdavis.edu/tempestextremes.php
 
 
