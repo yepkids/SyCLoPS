@@ -430,7 +430,7 @@ if __name__ == '__main__':
     for c, i in enumerate(tctrack):
         df0=dftc[dftc.TID==i]
         lst_tc=df0[(df0.Short_Label=='TC')].index[-1]
-        dfe=df0.loc[lst_tc+1:lst_tc+3]
+        dfe=df0.loc[lst_tc+1:lst_tc+round(3/convrate)]
         dfe=dfe[(dfe.Tropical_Flag==0) & (dfe.Short_Label != 'DSE')]
         if len(dfe)>0:
             fst_ex=dfe.index[0]
