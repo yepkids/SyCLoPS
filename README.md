@@ -6,7 +6,9 @@ Email:   yshhan@ucdavis.edu
 
 Copyright 2025-2026 Yushan Han
 
-SyCLoPS 1970-2024 ERA5 low-pressure system catalogs and datasets can be downloaded via Zenodo: [https://doi.org/10.5281/zenodo.10906284]
+SyCLoPS 1940-2024 ERA5 low-pressure system catalogs and datasets can be downloaded via Zenodo: [https://doi.org/10.5281/zenodo.10906284]  
+
+SyCLoPS 1988-2014 ERA5 low-pressure system catalogs and datasets can be downloaded via Zenodo: [https://zenodo.org/records/18178616]
 
 New features in v1.1
 =====
