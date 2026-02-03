@@ -192,14 +192,14 @@ if __name__ == '__main__':
     #Open and read the constant surface geopotential variable of a climate dataset
     dszs=xr.open_dataset(ZSFile).ZS
     lonz=dszs.longitude.to_numpy()%360*(np.pi/180)
-    latz=dszs.latitude.to_numpy()%360*(np.pi/180)
+    latz=dszs.latitude.to_numpy()*(np.pi/180)
     dszsnf=dszs.to_numpy().flatten()
     
     #Identify the start and end index of each track
     FST = np.unique(dfin.TID.values, return_index=1)[1]
     LST=len(dfin)-np.unique(dfin.TID.values[::-1], return_index=1)[1]-1
     #Convert longitudes and latitudes in both the input LPS catalog and blob stats dataset to the spherical coordinates (X,Y,Z) for implementing KDTrees:
-    LAT=np.array(dfin.LAT)%360;LON=np.array(dfin.LON)%360
+    LAT=np.array(dfin.LAT);LON=np.array(dfin.LON)%360
     X=np.cos(LON*(np.pi/180))*np.cos(LAT*(np.pi/180))
     Y=np.sin(LON*(np.pi/180))*np.cos(LAT*(np.pi/180))
     Z=np.sin(LAT*(np.pi/180))
