@@ -65,8 +65,7 @@ Optional steps for tagging precipitation and size blobs of LPSs can be found in 
 Documentation
 =====
 
-1. (New manual for v1.1 will be available soon) SyCLoPS manual (in PDF) can be found in the `manual` folder and can also found online here (the online version may be lagging): 
-https://climate.ucdavis.edu/syclops.php
+1. The latest SyCLoPS manual can be found here: https://climate.ucdavis.edu/syclops.php. You can also find the PDF-format manual in the `manual` folder.
 
 2. Details of the various executables that are part of TempestExtremes can be found in the user guide:
 https://climate.ucdavis.edu/tempestextremes.php
