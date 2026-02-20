@@ -19,8 +19,8 @@ model_data_name = "ERA5" # Change this to your model or dataset name used in the
 timefilter = "3hr"
 # Define the merge distance for DetectNodes and the range distance for StitchNodes. Below is the recommendation for 3-hourly data.
 # If your time interval is different from the default 3-hour, please change the MergeDist and RangeDist variables accordingly.
-MergeDist = 4.0 #DetectNodes argument. For 6-hour interval: A range distance of 6.0 degree is recommended your focus is tropical system. Otherwise, a range distance of 8.0 degree is recommended.
-RangeDist = 6.0 #StitchNodes argument. Larger (smaller) systems often require a larger (smaller) range distance. It's best to keep RangeDist <= MergeDist.
+MergeDist = 6.0 #DetectNodes argument. This depends on your LPS of interest. Larger (smaller) systems often require a larger (smaller) merging distance. For general interests, set it as 6.0 GCD. It's best to keep RangeDist <= MergeDist.
+RangeDist = 4.0 #StitchNodes argument. For 6-hour interval: A range distance of 6.0 degree is recommended when your focus is tropical system. Otherwise, a range distance of 8.0 degree is recommended.
 print("Note: If your RangeDist is larger than MergeDist, the program will automatically use the 'prioritize' flag in StitchNodes. See the manual 2.2 for details.\n")
 MinTime = "18h" #StitchNodes argument
 MaxGap = "12h" #StitchNodes argument. This value can be shortened if you are using a very high-resolution dataset to avoid excessive noise.
