@@ -6,18 +6,18 @@ Email:   yshhan@ucdavis.edu
 
 Copyright 2025-2026 Yushan Han
 
-SyCLoPS 1940-2024 ERA5 low-pressure system catalogs and datasets can be downloaded via Zenodo: [https://doi.org/10.5281/zenodo.10906284]  
-
-SyCLoPS 1988-2014 HighResMIP low-pressure system catalogs and datasets can be downloaded via Zenodo: [https://zenodo.org/records/18178616]
-
 The SyCLoPS paper: [https://doi.org/10.1029/2024JD041287]
+
+Paper (preprint) on updates in SyCLoPS v1.1: [https://doi.org/10.22541/essoar.177038847.73410174/v1]
+
+SyCLoPS manual: [https://climate.ucdavis.edu/syclops.php]
 
 New features in v1.1
 =====
 
 (1) The SyCLoPS classifier now accepts the data grid resolution as a customizable input to refine tropical cyclone detection at any grid resolution.  
 (2) Improved detection of extratropical and tropical transitions in tropical cyclone tracks  
-(3) The introduction of the "--prioritize" argument in the StitchNodes command enables 6-hour interval tracking with a large range distance  
+(3) The introduction of the "--prioritize MSLP" argument in the StitchNodes command enables 6-hour interval tracking with a large range distance  
 (4) Improved support for unstructured grids  
 (5) A more convenient workflow for easily adapting to different models  
 (6) Automatic detection of TE runtime errors in subprocesses within the Python script  
@@ -69,6 +69,16 @@ Documentation
 
 2. Details of the various executables that are part of TempestExtremes can be found in the user guide:
 https://climate.ucdavis.edu/tempestextremes.php
+
+
+Datasets
+=====
+
+SyCLoPS 1940-2024 ERA5 low-pressure system catalogs and datasets via Zenodo: [https://doi.org/10.5281/zenodo.10906284]  
+
+SyCLoPS 1988-2014 HighResMIP low-pressure system catalogs and datasets via Zenodo: [https://zenodo.org/records/18226201]
+
+SyCLoPS 1988-2014 HighResMIP TC catalogs and datasets can be downloaded via Zenodo: [https://zenodo.org/records/18178615]
 
 
 Publications
