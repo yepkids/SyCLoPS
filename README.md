@@ -47,7 +47,7 @@ Dependencies
 
 The SyCLoPS software is built upon TempestExtremes (TE), the state-of-the-art atmospheric feature detector. The main TE branch can be downloaded at: [https://github.com/ClimateGlobalChange/tempestextremes]
 
-**Note:** TE now supports reading and calculating missing values in model outputs.
+**Note:** TE now supports proper handling of missing values in model data.
 
 The SyCLoPS software requires the following Python packages: Xarray, Pandas, PyArrow, multiprocess, cftime, and Scipy.
 
