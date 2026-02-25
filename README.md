@@ -18,11 +18,11 @@ New features in v1.1
 (1) The SyCLoPS classifier now accepts the data grid resolution as a customizable input to refine tropical cyclone detection at any grid resolution.  
 (2) Improved detection of extratropical and tropical transitions in tropical cyclone tracks  
 (3) The new "Adusted_Label" column is adjusted for short-term, unstable classifications in boundary cases of the tropical cyclone and monsoonal system tracks.
-(3) The introduction of the "--prioritize MSLP" argument in the StitchNodes command enables 6-hour interval tracking with a large range distance  
-(4) Improved support for unstructured grids  
-(5) A more convenient workflow for easily adapting to different models  
-(6) Automatic detection of TE runtime errors in subprocesses within the Python script  
-(7) A new tool (`NodeFile_to_csv.py`) uploaded to the `optional` folder enables direct transformation from DetectNodes outputs to a user-friendly csv.  
+(4) The introduction of the "--prioritize MSLP" argument in the StitchNodes command enables 6-hour interval tracking with a large range distance  
+(5) Improved support for unstructured grids  
+(6) A more convenient workflow for easily adapting to different models  
+(7) Automatic detection of TE runtime errors in subprocesses within the Python script  
+(8) A new tool (`NodeFile_to_csv.py`) uploaded to the `optional` folder enables direct transformation from DetectNodes outputs to a user-friendly csv.  
 
 Introduction
 =====
