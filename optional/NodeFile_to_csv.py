@@ -1,4 +1,4 @@
-# TE/SyCLoPS tool: to directly output DetectNodes output txts to a single CSV file
+# TE/SyCLoPS tool: to directly convert DetectNodes output txts to a StitchNodes-style CSV file
 # Author: Yushan Han
 # Date: Jan 2026
 import numpy as np
@@ -39,6 +39,6 @@ df.columns = ["ISOTIME", "n_i", "n_j", "lon", "lat", "MSLP","MSLPCC20","MSLPCC55
                 "Z500CC","VO500AVG","RH100MAX","RH850AVG","T850","Z850","ZS","U850DIFF","WS200PMX"] # Modify column names as needed
 # Add track_id column for each row. Each row will have a unique track_id starting from 0
 df.insert(0, "track_id", range(len(df)))
-output_file = "/full_path_to_your_output_csv_files"
+output_file = "/full_path_to_your_output_csv_files" #You can dierectly use this file in the SyCLoPS Classifier prorganm as the "TETrackFile."
 df.to_csv(output_file, index=False)
 print(f"Saved {len(df)} rows to {output_file}")
