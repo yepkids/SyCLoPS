@@ -6,7 +6,7 @@ import pandas as pd
 from datetime import datetime
 import glob
 
-input_file_list=sorted(glob.glob("/path_to_DetectNodes_output_files/*.txt"))
+input_file_list=sorted(glob.glob("/full_path_to_DetectNodes_output_files/*.txt"))
 
 rows = []
 current_datetime = None
@@ -30,12 +30,15 @@ for input_file in input_file_list:
                 
 # Create DataFrame once
 n_data_cols = len(rows[0]) - 1
-columns = ["datetime"] + [f"var{i+1}" for i in range(n_data_cols)]
+columns = ["ISOTIME"] + [f"var{i+1}" for i in range(n_data_cols)]
 
 #Write CSV
 df = pd.DataFrame(rows, columns=columns)
 # Rename all columns depending on your data
-df.columns = ["datetime", "n_i", "n_j", "lon", "lat", ...]
-output_file = "CNRM_all_data.csv"
+df.columns = ["ISOTIME", "n_i", "n_j", "lon", "lat", "MSLP","MSLPCC20","MSLPCC55","WS","DEEPSHEAR","UPPTKCC","MIDTKCC","LOWTKCC",
+                "Z500CC","VO500AVG","RH100MAX","RH850AVG","T850","Z850","ZS","U850DIFF","WS200PMX"] # Modify column names as needed
+# Add track_id column for each row. Each row will have a unique track_id starting from 0
+df.insert(0, "track_id", range(len(df)))
+output_file = "/full_path_to_your_output_csv_files"
 df.to_csv(output_file, index=False)
 print(f"Saved {len(df)} rows to {output_file}")

@@ -110,8 +110,8 @@ def check_log_dir(log_dir,t0):
         exit(1)
 
 # Build the TempestExtremes commands. Feel free to modify the atmospheric variable names and levels.
-print("\nRemember to change the atmospheric variable names in the TE commands if necessary. You usually don't need to change the hPa level unit.\n")
-print("However, if variables in your inputfiles are on a single level, e.g., U850 representing U at 850 hPa, then use "U850" to replace "U(850hPa)."
+print("\nRemember to change the atmospheric variable names in the TE commands if necessary. You usually don't need to change the hPa level unit.")
+print("However, if variables in your inputfiles are on a single level, e.g., U850 representing U at 850 hPa, then use 'U850' to replace 'U(850hPa)'.\n")
 print("If you run into issues with TE commands and can't solve them here in the main program, you may use 'TE_commands.sh' (which contains original TE bash codes) for further debugging.\n\
 You may also check the TE documentation and the SyCLoPS manual.")
 # If your dataset uses a 360-day calendar (rare), uncomment line 163.
