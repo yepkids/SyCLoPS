@@ -22,7 +22,7 @@ New features in v1.1
 (5) Improved support for unstructured grids  
 (6) A more convenient workflow for easily adapting to different models  
 (7) Automatic detection of TE runtime errors in subprocesses within the Python script  
-(8) A new tool (`NodeFile_to_csv.py`) uploaded to the `optional` folder enables direct transformation from DetectNodes outputs to a user-friendly csv  
+(8) A new tool (`NodeFile_to_csv.py`) uploaded to the `optional` folder enables direct transformation from DetectNodes outputs to a StitchNodes-style csv. With this tool, one may complete LPS classification only at the node level without using the tracks output by StitchNodes.
 
 Introduction
 =====
