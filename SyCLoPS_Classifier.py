@@ -299,7 +299,7 @@ if __name__ == '__main__':
 
     ## High-altitude Branch Labeling
     try:
-        cond_hal=(dfin.Z850<dfin.ZS) | (dfin.Z850-dfin.ZS<100) #High-altitude Condition. Z850 is not necessary for classification if data contains missing values (typically 1e20 or 1e15) or NaN. T850 will be used.
+        cond_hal=(dfin.Z850-dfin.ZS<100*zgconv) & ~(dfin.MSLP<=92500) #High-altitude Condition. Z850 is not necessary for classification if data contains missing values (typically 1e20 or 1e15) or NaN. T850 will be used.
     except:
         cond_hal=(dfin.T850!=dfin.T850) | (abs(dfin.T850)>1e14) | (dfin.T850==0)
     df_hatl=dfin[(cond_hal) & ((dfin.MIDTKCC<0)|(dfin.UPPTKCC<0))]; hatl_id=df_hatl.index.values #nodes that satisfy criteria of HATL. Check for missing values is added.
@@ -321,10 +321,10 @@ if __name__ == '__main__':
     # TC Labeling
     if data250=='Y' or data250=='y':
         cond_trop=(dfin.RH100MAX>20*rhconv) & (dfin.DEEPSHEAR<13) & (dfin.T850>280) 
-        cond_tc=(dfin.UPPTKCC<-117.6*zgconv) & (dfin.LOWTKCC<0) & (dfin.MSLPCC20>round_to_nearest5(-107*grid_res+247)) 
+        cond_tc=(dfin.MSLP<=92500) | ((dfin.UPPTKCC<-117.6*zgconv) & (dfin.LOWTKCC<0) & (dfin.MSLPCC20>round_to_nearest5(-107*grid_res+247)))
     else:
         cond_trop=(dfin.RH100MAX>20*rhconv) & (dfin.DEEPSHEAR<18) & (dfin.T850>280) #Default Tropical Condition
-        cond_tc=(dfin.UPPTKCC<-107.8*zgconv) & (dfin.LOWTKCC<0) & (dfin.MSLPCC20>round_to_nearest5(-85*grid_res+220)) #Default Tropical Cyclone Condition
+        cond_tc=(dfin.MSLP<=92500) | ((dfin.UPPTKCC<-107.8*zgconv) & (dfin.LOWTKCC<0) & (dfin.MSLPCC20>round_to_nearest5(-85*grid_res+220))) #Default Tropical Cyclone Condition
         
     cond_td=(dfin.MSLPCC55>160) & (dfin.UPPTKCC<0)  #Tropical Depression Condition
     cond_md=(dfin.RH850AVG>85*rhconv) & (dfin.U850DIFF>0)  #Monsoon System Condition

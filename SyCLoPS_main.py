@@ -77,7 +77,7 @@ outputfile_DB = f"{model_data_name}_sizeblob_out.txt" #This txt file should cont
 outputfile_BS = f"{model_data_name}_size_blob_stats.txt" #This is the single output file of BlobStats which contains the blob statistics.
 
 # Define atmospheric variable names in your dataset. Change them if necessary.
-mslp_name = 'MSL'
+mslp_name = 'MSL' #This should be in the unit of Pa
 z_name = 'Z'
 u_name = 'U'
 v_name = 'V'
