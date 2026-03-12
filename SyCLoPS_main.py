@@ -135,6 +135,7 @@ detect_nodes_cmd = [
     f"_DIFF({z_name}(700hPa),{z_name}(925hPa)),negclosedcontour,3.5,1;" #LOWTKCC
     f"{z_name}(500hPa),posclosedcontour,3.5,1;" #Z500CC
     f"_CURL{{8,2.5}}({u_name}(500hPa),{v_name}(500hPa)),min,0;" #VO500AVG ## Using _CURL{{16,2.5}} is also acceptable for higher-resolution data.
+    f"{r_name}(100hPa),max,2.5;" #RH100MAX
     f"{r_name}(850hPa),avg,2.5;" #RH850AVG
     f"{t_name}(850hPa),max,0.0;" #T850
     f"{z_name}(850hPa),min,0;" #Z850 ## This parameter is not necessary if the dataset contains NaNs or missing values where 850 hPa level is below the surface. If you removed this, please also remove "Z850" in the StitchNodes command below
