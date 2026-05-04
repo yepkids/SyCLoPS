@@ -46,6 +46,7 @@ Dependencies
 =====
 
 The SyCLoPS software is built upon TempestExtremes (TE), the state-of-the-art atmospheric feature detector. The main TE branch can be downloaded at: [https://github.com/ClimateGlobalChange/tempestextremes]
+We recommend using the `quick_make_unix.sh` script (`sh quick_make_unix.sh `) in the TE root directory to install TE.
 
 **Note:** TE now supports proper handling of missing values in model data.
 
