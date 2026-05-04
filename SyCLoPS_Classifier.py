@@ -479,7 +479,7 @@ if __name__ == '__main__':
                     if abs(mslp_values-mslp_int).max() <= 500:
                         labels[i:i+j] = 'TC'
     dfin['Adjusted_Label'] = labels
-    dfc_tc = dfin[(dfin['Track_Info'].str.contains('TC')) & (dfin.Adjusted_Label=='TC')].reset_index(drop=True)
+    #dfc_tc = dfin[(dfin['Track_Info'].str.contains('TC')) & (dfin.Adjusted_Label=='TC')].reset_index(drop=True)
     dfms = dfin[dfin.TID.isin(mstrack)] #Select MS tracks
     labels = dfin.Adjusted_Label.values.copy()
     fi=dfms.groupby('TID').head(1).index
