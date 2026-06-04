@@ -13,7 +13,7 @@ Activate an appropriate Python environment that has Xarray, Pandas, PyArrow, mul
 # Point to your TempestExtremes (TE) directory by specifying:
 TEMPESTEXTREMESDIR = os.path.expanduser('~/tempestextremes/bin')
 print("Please change the following specifications according to your requirements. The default is for ERA5 data at 3-hourly interval.\n")
-model_data_name = "MERRA2" # Change this to your model or dataset name used in the input and output file lists.
+model_data_name = "ERA5" # Change this to your model or dataset name used in the input and output file lists.
 # Define your time interval.
 timefilter = "3hr" #To ensure track quality, time interval should not be larger than 6 hours ("6hr").
 time_convrate=int(timefilter[0])/3 # Conversion rate will automatically applied to several DetetNodes and StitchNodes parameters in the code below. The default is 1 for 3-hourly data.

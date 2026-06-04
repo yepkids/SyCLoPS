@@ -17,9 +17,9 @@ New features in v1.1
 
 **In the latest v1.1.5**:  
 (a) Bugs introudced in a recent update were fixed.  
-(a) Weak LPS node stitching and unreasonable jumpy nodes issues along tracks are noticebaly improved, especially for 6-hourly tracking.  
-(b) Introduced the new classification "Hybrid TC." Details will be discussed in our next paper manuscript. Stay tuned for preprint.  
-(c) We plan to remove the high-altitude branch and simplify the dry LPS branch in the classification in our next major update coming soon. Stay tuned.
+(b) Weak LPS node stitching and unreasonable jumpy nodes issues along tracks are noticebaly improved, especially for 6-hourly tracking.  
+(c) Introduced the new classification "Hybrid TC." Details will be discussed in our next paper manuscript. Stay tuned for preprint.  
+(d) We plan to remove the high-altitude branch and simplify the dry LPS branch in the classification in our next major update coming soon. Stay tuned.
 
 (1) The SyCLoPS classifier now accepts the data grid resolution as a customizable input to refine tropical cyclone detection at any grid resolution    
 (2) Improved detection of extratropical and tropical transitions in tropical cyclone tracks  
