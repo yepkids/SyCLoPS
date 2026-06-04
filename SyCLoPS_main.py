@@ -1,6 +1,6 @@
 print("\nThis is the SyCLoPS main program for executing TempestExtremes (TE) commands and run the Python classifier program.\n")
 print("Please direct any questions to the author of this script: Yushan Han (yshhan@ucdavis.edu)\n")
-print("Version: 2026-02-18 \n")
+print("Version: 2026-06-01 \n")
 print("The SyCLoPS manual might be helpful if you run into issues with the srcipts.")
 import os
 import subprocess
@@ -12,21 +12,22 @@ Activate an appropriate Python environment that has Xarray, Pandas, PyArrow, mul
 
 # Point to your TempestExtremes (TE) directory by specifying:
 TEMPESTEXTREMESDIR = os.path.expanduser('~/tempestextremes/bin')
-
 print("Please change the following specifications according to your requirements. The default is for ERA5 data at 3-hourly interval.\n")
-model_data_name = "ERA5" # Change this to your model or dataset name used in the input and output file lists.
+model_data_name = "MERRA2" # Change this to your model or dataset name used in the input and output file lists.
 # Define your time interval.
-timefilter = "3hr"
+timefilter = "3hr" #To ensure track quality, time interval should not be larger than 6 hours ("6hr").
+time_convrate=int(timefilter[0])/3 # Conversion rate will automatically applied to several DetetNodes and StitchNodes parameters in the code below. The default is 1 for 3-hourly data.
 # Define the merge distance for DetectNodes and the range distance for StitchNodes. Below is the recommendation for 3-hourly data.
 # If your time interval is different from the default 3-hour, please change the MergeDist and RangeDist variables accordingly based on the suggestions below.
-MergeDist = 6.0 #DetectNodes argument. This depends on your LPS of interest. Larger (smaller) systems often require a larger (smaller) merging distance. For general interests, set it as 6.0 GCD. It's best to keep RangeDist <= MergeDist.
-RangeDist = 4.0 #StitchNodes argument. For 6-hour interval: A range distance of 6.0 degree is recommended when your focus is tropical system. Otherwise, a range distance of 8.0 degree is recommended.
+floating_point_adj=1e-6 #This is a small number added to the threshold in StitchNodes to avoid potential issues with floating point precision. No need to change in most cases.
+MergeDist = 6.0 + floating_point_adj #DetectNodes argument. This depends on your LPS of interest. Larger (smaller) systems often require a larger (smaller) merging distance. For general interests, set it as 6.0 GCD. It's best to keep RangeDist <= MergeDist.
+RangeDist = 4.0/time_convrate + floating_point_adj #StitchNodes argument. Automatically adjusted by the time interval. No need to change in most cases.
 print("Note: If your RangeDist is larger than MergeDist, the program will automatically use the 'prioritize' flag in StitchNodes. See the manual 2.2 for details.\n")
-MinTime = "18h" #StitchNodes argument
-MaxGap = "12h" #StitchNodes argument. This value can be shortened to avoid excessive noise if you are using a very high-resolution dataset.
-MSLP55CCStep = 5 #Steps for the MSLPCC55 threshold in StitchNodes to remove too-short and too-weak tracks. If you use 6-hourly data, you may lower this value to 3 or 2.
-latname = 'latitude' #Name of the latitude variable in your dataset.
-lonname = 'longitude' #Name of the longitude variable in your dataset.
+MinTime = "18h" #StitchNodes argument. Definined the minimum track length. No need to change in most cases.
+MaxGap = "12h" #StitchNodes argument. Defined the maximum gap allowed in track stitching. No need to change in most cases.
+MSLP55CCStep = round(5*time_convrate+0.01) #Automatically determined by your time interval.
+latname = 'lat' #Name of the latitude variable in your dataset.
+lonname = 'lon' #Name of the longitude variable in your dataset.
 
 use_srun = True # Change to True if you want to use srun. Also see line 183 to verify if "srun" works on your machine.
 srun_n = "256"    # Number of tasks (threads) for srun
@@ -40,7 +41,7 @@ uv_level_value = "250hPa" if use_250hPa_only else "200hPa"
 z_level_value = "250hPa" if use_250hPa_only else "300hPa"
 
 # Create a log directory if it doesn't exist (for storing temporary logs of TempestExtremes). You may change the path and name of this log directory.
-log_dir= "./TE_log"
+log_dir= "./TE_log2"
 os.makedirs(log_dir, exist_ok=True)
 
 # Mode choice by user
@@ -83,8 +84,8 @@ u_name = 'U'
 v_name = 'V'
 r_name = 'R'
 t_name = 'T'
-uas_name = 'VAR_10U'
-vas_name = 'VAR_10V'
+uas_name = 'VAR_10U' # Optional
+vas_name = 'VAR_10V' # Optional
 zs_name = 'ZS'
 #vo_name = 'VO' # Relative vorticity is no longer needed. It can be calculated via TE using U and V.
 
@@ -146,7 +147,7 @@ detect_nodes_cmd = [
     "--latname", latname,
     "--lonname", lonname,
     "--mergeequal",
-    "--logdir", "./TE_log"
+    "--logdir", f"./{log_dir}"
 ]
 
 stitch_nodes_cmd = [
@@ -160,11 +161,12 @@ stitch_nodes_cmd = [
     "--mintime", MinTime,
     "--maxgap", MaxGap,
     "--threshold", f"MSLPCC55,>=,100.0,{MSLP55CCStep}",
+    "--timefilter", timefilter,
     "--out_file_format", "csv",
     #"--caltype","360_day" ## If your dataset uses a 360-day calendar (rare), uncomment this line.
 ]
 if MergeDist < RangeDist:
-     stitch_nodes_cmd.extend(["--prioritize", "MSLP"])
+     stitch_nodes_cmd.extend(["--prioritize", "-MSLPCC55"])
 
 variable_processor_cmd = [
     f"{TEMPESTEXTREMESDIR}/VariableProcessor",
@@ -174,7 +176,7 @@ variable_processor_cmd = [
     "--varout", "Cyclonic_Vorticity,U925,V925", # U and V at 925 hPa (U925 & V925) will be used in the next step.
     "--latname", latname,
     "--lonname", lonname,
-    "--logdir", "./TE_log",
+    "--logdir", f"./{log_dir}",
     "--timefilter", timefilter
 ]
 
@@ -188,7 +190,7 @@ detect_blobs_cmd = [
     "--latname", latname,
     "--lonname", lonname,
     "--timefilter", timefilter,
-    "--logdir", "./TE_log"
+    "--logdir", f"./{log_dir}"
 ]
 
 blobstats_cmd = [
