@@ -17,7 +17,7 @@ New features in v1.1
 
 **In the latest v1.1.5**:  
 (a) Bugs introudced in a recent update were fixed.  
-(b) Weak LPS node stitching and unreasonable jumpy nodes issues along tracks are noticebaly improved, especially for 6-hourly tracking.  
+(b) Weak LPS node stitching and unreasonable jumpy nodes issues along tracks are noticebaly improved, especially for 6-hourly tracking. New ERA5 datasets are generated based on this. See the dataset section.  
 (c) Introduced the new classification "Hybrid TC." Details will be discussed in our next paper manuscript. Stay tuned for preprint.  
 (d) We plan to remove the high-altitude branch and simplify the dry LPS branch in the classification in our next major update coming soon. Stay tuned.
 
@@ -82,7 +82,7 @@ https://climate.ucdavis.edu/tempestextremes.php
 Datasets
 =====
 
-SyCLoPS 1940-2024 ERA5 low-pressure system catalogs and datasets via Zenodo: [https://doi.org/10.5281/zenodo.10906284]  
+SyCLoPS 1940-2024 ERA5 low-pressure system catalogs and datasets via Zenodo: [https://doi.org/10.5281/zenodo.10906284]  **Updated June 2, 2026. Improved tracks.**  
 
 SyCLoPS 1988-2014 HighResMIP low-pressure system catalogs and datasets via Zenodo: [https://zenodo.org/records/18226201]
 
