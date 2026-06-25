@@ -21,7 +21,7 @@ time_convrate=int(timefilter[0])/3 # Conversion rate will automatically applied 
 # If your time interval is different from the default 3-hour, please change the MergeDist and RangeDist variables accordingly based on the suggestions below.
 floating_point_adj=1e-6 #This is a small number added to the threshold in StitchNodes to avoid potential issues with floating point precision. No need to change in most cases.
 MergeDist = 6.0 + floating_point_adj #DetectNodes argument. This depends on your LPS of interest. Larger (smaller) systems often require a larger (smaller) merging distance. For general interests, set it as 6.0 GCD. It's best to keep RangeDist <= MergeDist.
-RangeDist = 4.0/time_convrate + floating_point_adj #StitchNodes argument. Automatically adjusted by the time interval. No need to change in most cases.
+RangeDist = 4.0*time_convrate + floating_point_adj #StitchNodes argument. Automatically adjusted by the time interval. No need to change in most cases.
 print("Note: If your RangeDist is larger than MergeDist, the program will automatically use the 'prioritize' flag in StitchNodes. See the manual 2.2 for details.\n")
 MinTime = "18h" #StitchNodes argument. Definined the minimum track length. No need to change in most cases.
 MaxGap = "12h" #StitchNodes argument. Defined the maximum gap allowed in track stitching. No need to change in most cases.
