@@ -12,47 +12,41 @@ Paper (preprint) on updates in SyCLoPS v1.1: [https://doi.org/10.22541/essoar.17
 
 SyCLoPS manual: [https://climate.ucdavis.edu/syclops.php]
 
-New features in v1.1
+New features in v1.2
 =====
+ 
+(1) Weak LPS node stitching and unreasonable jumpy nodes issues along tracks are noticebaly improved, especially for 6-hourly tracking. New ERA5 datasets are generated based on this. See the dataset section.  
+(2) Introduced the new classification "Hybrid TC." Details will be discussed in our next paper manuscript. Stay tuned for preprint.  
+(3) Added columns of LPS translation distance/speed ("distance") and moving direction ("direction").  
+(4) Improved data structure: Change "0" and "1" flags to boolean data type. Minimizie data bytes for more a compact file size.  
+(5) We removed the high-altitude branch and simplify the dry LPS branch in the classification. Please see an updated classification worflow below:  
 
-**In the latest v1.1.5**:  
-(a) Bugs introudced in a recent update were fixed.  
-(b) Weak LPS node stitching and unreasonable jumpy nodes issues along tracks are noticebaly improved, especially for 6-hourly tracking. New ERA5 datasets are generated based on this. See the dataset section.  
-(c) Introduced the new classification "Hybrid TC." Details will be discussed in our next paper manuscript. Stay tuned for preprint.  
-(d) We plan to remove the high-altitude branch and simplify the dry LPS branch in the classification in our next major update coming soon. Stay tuned.
+![SyCLoPS Workflow V1.2](manual/SyCLoPS_flowchat_v1.2.png)  
 
-(1) The SyCLoPS classifier now accepts the data grid resolution as a customizable input to refine tropical cyclone detection at any grid resolution    
-(2) Improved detection of extratropical and tropical transitions in tropical cyclone tracks  
-(3) The new "Adusted_Label" column is adjusted for short-term, unstable classifications in boundary cases of the tropical cyclone and monsoonal system tracks    
-(4) The introduction of the "--prioritize MSLP" argument in the StitchNodes command enables 6-hour interval tracking with a large range distance  
-(5) Improved support for unstructured grids  
-(6) A more convenient workflow for easily adapting to different models  
-(7) Automatic detection of TE runtime errors in subprocesses within the Python script  
-(8) A new tool (`NodeFile_to_csv.py`) uploaded to the `optional` folder enables direct transformation from DetectNodes outputs to a StitchNodes-style csv. With this tool, one may complete LPS classification only at the node level without using the tracks output by StitchNodes.
+Some details for (5): We renamed the dry LPS branch to land LPS branch. Within the branch, an LPS node candidate will first need to satisfy eitherthe high-altitude condition or dryness condition, then it will be checked for the thermal-low condition. A thermal low should bear a low-, mid-, or upper level wam core depending on its surface elevation. More details to follow in the upcoming new version of user manual. Stay tuned.  
 
 Introduction
 =====
 
-The System for classification of Low-Pressure Systems (SyCLoPS) is an all-in-one framework for objective detection and classification of any type of surface low-pressure systems (LPSs) in any large atmospheric dataset and model outputs in one workflow. The required atmopsheric variables for the framework can be found at `manual/Required_variable.png`. SyCLoPS is capable of labeling the following types of LPS:
+The System for classification of Low-Pressure Systems (SyCLoPS) is an all-in-one framework for objective detection and classification of any type of surface low-pressure systems (LPSs) in any large atmospheric dataset and model outputs in one workflow. The required atmopsheric variables for the framework can be found at `manual/Required_variable.png`. SyCLoPS is capable of labeling the following 14 types of LPS:
 
 | LPS node Label         | LPS Full Name                                      |
 |------------------------|----------------------------------------------------|
-| HAL / HATHL            | High-altitude Low / High-altitude Thermal Low      |
-| THL / DOTHL            | Thermal Low / Deep (Orographic) Thermal Low        | 
-| DSD / DST / DSE        | Dry / Tropical/ Extratropical Disturbance          |
-| TC                     | Tropical Cyclone                                   |
+| THL                    | Thermal Low                                        | 
+| DSL / DST / DSE        | Land / Tropical / Extratropical Disturbance        |
+| TC / HTC               | Tropical Cyclone / Hybrid TC                       |
 | TD / TD(MD)            | Tropical Depression / TD (Monsoon Depression)      |
 | TLO / TLO(ML)          | Tropical Low / TLO (Monsoon Low)                   |
 | SS(STLC) / PL(PTLC)    | Subtropical Storm (Subtropical Tropical-Like Cyclone) / Polar Low (Polar TLC) |
 | SC / EX                | Subtropical Cyclone / Extratropical Cyclone        |
 
-It also labels the four high-impact LPS tracks: TC, MS (Monsoonal System), SS(STLC), and PL(PTLC) tracks. Tracks are labeled when LPSs are stably labeld as a type of LPS class for a period of time so it can be compared with the corresponding subjective dataset.
+It also labels the four high-impact LPS tracks: TC, MS (Monsoonal System), SS(STLC), and PL(PTLC) tracks. We recently added hybrid TC tracks ("HT" tracks). Tracks are labeled when LPSs are stably labeld as a type of LPS class for a period of time so it can be compared with the corresponding subjective dataset.
 
 Dependencies
 =====
 
 The SyCLoPS software is built upon TempestExtremes (TE), the state-of-the-art atmospheric feature detector. The main TE branch can be downloaded at: [https://github.com/ClimateGlobalChange/tempestextremes]  
-We recommend using the `quick_make_unix.sh` script (running `sh quick_make_unix.sh ` in terminal) in the TE root directory to install TE.
+We recommend using the `quick_make_unix.sh` script (simply run `sh quick_make_unix.sh`) in the TE root directory to install TE.
 
 **Note:** TE now supports proper handling of missing values in model data.
 
