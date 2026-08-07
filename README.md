@@ -19,7 +19,7 @@ New features in v1.2
 (2) Introduced the new classification "Hybrid TC." Details will be discussed in our next paper manuscript. Stay tuned for preprint.  
 (3) Added columns of LPS translation distance/speed ("distance") and moving direction ("direction").  
 (4) Improved data structure: Change "0" and "1" flags to boolean data type. Minimizie data bytes for more a compact file size.  
-(5) We removed the high-altitude branch and simplify the dry LPS branch in the classification. Please see an updated classification worflow below:  
+(5) We removed the high-altitude branch and simplified the dry LPS branch in the classification. Please see an updated classification worflow below:  
 
 ![SyCLoPS Workflow V1.2](manual/SyCLoPS_flowchat_v1.2.png)  
 
@@ -76,7 +76,7 @@ https://climate.ucdavis.edu/tempestextremes.php
 Datasets
 =====
 
-SyCLoPS 1940-2024 ERA5 low-pressure system catalogs and datasets via Zenodo: [https://doi.org/10.5281/zenodo.10906284]  **Updated June 2, 2026. Improved tracks.**  
+SyCLoPS 1940-2024 ERA5 low-pressure system catalogs and datasets via Zenodo: [https://doi.org/10.5281/zenodo.10906284]  **Updated Aug 7, 2026. Reflect Changes in SyCLoPS v1.2.**  
 
 SyCLoPS 1988-2014 HighResMIP low-pressure system catalogs and datasets via Zenodo: [https://zenodo.org/records/18226201]
 
