@@ -154,7 +154,7 @@ stitch_nodes_cmd = [
     "--in_list", outputfile_DN,
     "--out", outputfile_SN,
     "--in_fmt", "lon,lat,MSLP,MSLPCC20,MSLPCC55,WS,DEEPSHEAR,UPPTKCC,MIDTKCC,LOWTKCC,"
-                "Z500CC,VO500AVG,RH100MAX,RH850AVG,T850,Z850,ZS,U850DIFF,WS200PMX",
+                "Z500CC,VO500AVG,RH100MAX,RH850AVG,T850,Z850,U850DIFF,WS200PMX",
     # Change the parameter (names) in this argument according to the outputcmd in DetectNodes if applicable. If using 250 hPa data, it's recommended to change the parameter name "WS200PMX" to "WS250PMX".
     "--range", str(RangeDist),
     "--mintime", MinTime,
