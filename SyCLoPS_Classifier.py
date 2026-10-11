@@ -496,8 +496,8 @@ if __name__ == '__main__':
     df_adj_tc = dfin[~(cond_hal) & ~(cond_dry) & (cond_cv)  & (cond_trop_htc) & (cond_tc)]
     Full_Name[htc_id]="Hybrid Tropical Cyclone"; short_label[htc_id]="HTC"
     # If a HTC formed, it is deemed as a tropical system in the transition zone.
-    dfin.loc[cond_trop_htc & cond_tc, 'Transition_Zone']=True
-    dfin.loc[cond_trop_htc & cond_tc,'Tropical_Flag']=True
+    dfin.loc[dfin.index[htc_id], 'Transition_Zone']=True
+    dfin.loc[dfin.index[htc_id],'Tropical_Flag']=True
     
     #Assign all the labels to the columns:
     dfin['Short_Label']=short_label
